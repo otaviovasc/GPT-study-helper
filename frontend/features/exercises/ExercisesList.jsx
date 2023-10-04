@@ -1,40 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { API_URL } from "../../constants"
+import React, { useState, useEffect } from 'react';
+import { API_URL } from "../../constants";
 
-function ExercisesList() {
+const ExercisesList = ({ selectedSubSubject }) => {
   const [exercises, setExercises] = useState([]);
-  const [, setLoading] = useState(true);
-  const [, setError] = useState(null);
-  const [answerVisibility, setAnswerVisibility] = useState({}); // State to track answer visibility
+  const [answerVisibility, setAnswerVisibility] = useState({});
 
   useEffect(() => {
-    async function loadExercises() {
-      try {
-        const response = await fetch(`${API_URL}/exercises`);
+    console.log("selected sub subject:")
+    console.log(selectedSubSubject);
+    if (selectedSubSubject) {
+      async function loadExercises() {
+        const response = await fetch(`${API_URL}/exercises?sub_subject_id=${selectedSubSubject}`);
         if (response.ok) {
           const json = await response.json();
           setExercises(json);
 
-          // Initialize answer visibility state
           const initialAnswerVisibility = {};
           json.forEach((exercise) => {
             initialAnswerVisibility[exercise.id] = false;
           });
           setAnswerVisibility(initialAnswerVisibility);
-        } else {
-          throw response;
         }
-      } catch (e) {
-        setError("An error occurred.");
-        console.log("An error occurred:", e);
-      } finally {
-        setLoading(false);
       }
+      loadExercises();
     }
-    loadExercises();
-  }, []);
+  }, [selectedSubSubject]);
 
-  // Function to toggle answer visibility for a specific exercise
   const toggleAnswerVisibility = (exerciseId) => {
     setAnswerVisibility((prevState) => ({
       ...prevState,
@@ -43,20 +34,18 @@ function ExercisesList() {
   };
 
   return (
-    <>
-      <div>
-        {exercises.map((exercise) => (
-          <div key={exercise.id} className="exercise-container">
-            <h2>{exercise.question}</h2>
-            <button onClick={() => toggleAnswerVisibility(exercise.id)}>
-              {answerVisibility[exercise.id] ? "Hide Answer" : "Show Answer"}
-            </button>
-            {answerVisibility[exercise.id] && <p>{exercise.answer}</p>}
-          </div>
-        ))}
-      </div>
-    </>
+    <div>
+      {exercises.map((exercise) => (
+        <div key={exercise.id}>
+          <h2>{exercise.question}</h2>
+          <button onClick={() => toggleAnswerVisibility(exercise.id)}>
+            {answerVisibility[exercise.id] ? "Esconder Resposta" : "Mostrar Resposta"}
+          </button>
+          {answerVisibility[exercise.id] && <p>{exercise.answer}</p>}
+        </div>
+      ))}
+    </div>
   );
-}
+};
 
 export default ExercisesList;

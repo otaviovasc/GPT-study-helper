@@ -1,0 +1,17 @@
+.formContainer {
+  width: 300px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.formItem {
+  margin-bottom: 16px;
+}
+
+.labelStyle {
+  color: white !important; /* Sets the label color to white */
+  font-size: 1.2em !important; /* Increases the font size a bit */
+}
