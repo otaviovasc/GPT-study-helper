@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_02_161638) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_04_033156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_02_161638) do
     t.bigint "sub_subject_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "direita", default: [], array: true
+    t.text "options", default: [], array: true
+    t.string "img_tag", default: [], array: true
     t.index ["sub_subject_id"], name: "index_exercises_on_sub_subject_id"
   end
 
