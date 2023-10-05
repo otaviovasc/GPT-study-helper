@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SelectionForm from './forms/SelectionForm';
 import ExercisesList from './exercises/ExercisesList';
 
+// Main parent component that manage the child components
 const ParentComponent = () => {
   const [selectedSubSubject, setSelectedSubSubject] = useState(null);
 

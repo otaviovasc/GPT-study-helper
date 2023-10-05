@@ -4,6 +4,7 @@ require 'nokogiri'
 Exercise.destroy_all
 SubSubject.destroy_all
 Subject.destroy_all
+puts "Cleaned DB"
 
 URLS = [
   ["https://projetoagathaedu.com.br/banco-de-questoes/biologia.php", "Biologia"],

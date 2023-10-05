@@ -1,0 +1,10 @@
+.option
+{
+  text-align: left;
+  display: flex;
+  align-items: start;
+  justify-content: flex-start;
+  color: #ffffff;
+  font-size: large;
+  margin-top: 10px;
+}

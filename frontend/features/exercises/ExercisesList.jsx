@@ -1,39 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { API_URL } from "../../constants";
+import { useState, useEffect } from 'react';
 import './ExercisesList.css';
+import { API_URL } from "../../constants";
+import Options from './Options';
+import PropTypes from 'prop-types';
 
+// Component responsible for displaying the list of exercises.
 const ExercisesList = ({ selectedSubSubject }) => {
   const [exercises, setExercises] = useState([]);
-  const [answerVisibility, setAnswerVisibility] = useState({});
 
   useEffect(() => {
-    console.log("selected sub subject:")
-    console.log(selectedSubSubject);
-    if (selectedSubSubject) {
-      async function loadExercises() {
-        const response = await fetch(`${API_URL}/exercises?sub_subject_id=${selectedSubSubject}`);
-        if (response.ok) {
-          const json = await response.json();
-          setExercises(json);
+      // Fetch exercises based on selected sub-subject
+      if (selectedSubSubject) {
+          const loadExercises = async () => {
+              const response = await fetch(`${API_URL}/exercises?sub_subject_id=${selectedSubSubject}`);
+              if (response.ok) {
+                  const json = await response.json();
+                  setExercises(json);
+              }
+          };
 
-          const initialAnswerVisibility = {};
-          json.forEach((exercise) => {
-            initialAnswerVisibility[exercise.id] = false;
-          });
-          setAnswerVisibility(initialAnswerVisibility);
-        }
+          loadExercises();
       }
-      loadExercises();
-    }
   }, [selectedSubSubject]);
 
-  const toggleAnswerVisibility = (exerciseId) => {
-    setAnswerVisibility((prevState) => ({
-      ...prevState,
-      [exerciseId]: !prevState[exerciseId],
-    }));
-  };
-
+  // Processes question text for better display
   function processQuestionText(text) {
     const BREAK_LIMIT = 40;
     let charCounter = 0;
@@ -49,7 +39,7 @@ const ExercisesList = ({ selectedSubSubject }) => {
         (char === "." || char === "?") &&
         charCounter > BREAK_LIMIT
       ) {
-        elements.push(<span key={idx}>{currentSentence}<br/><br/></span>);
+        elements.push(<span key={idx}>{currentSentence}<br/></span>);
         currentSentence = "";
         charCounter = 0;
       }
@@ -67,7 +57,7 @@ const ExercisesList = ({ selectedSubSubject }) => {
     <div>
       {exercises.map((exercise) => (
         <div key={exercise.id} className="exercise-container">
-          <h2>{processQuestionText(exercise.question)}</h2>
+          <h3>{processQuestionText(exercise.question)}</h3>
 
           {/* Render images from img_tag */}
           {exercise.img_tag && exercise.img_tag.map((imgSrc, idx) => (
@@ -80,27 +70,18 @@ const ExercisesList = ({ selectedSubSubject }) => {
           ))}
 
           {/* Render options */}
-          <ul>
-            {exercise.options && exercise.options.map((option, idx) => {
-              const isImage = option.startsWith("http");
-              const optionLetter = String.fromCharCode(65 + idx); // 65 is ASCII for 'A'
-              return (
-                <h3 key={idx}>
-                  {optionLetter}. {isImage ? <img src={option} alt={`Option ${optionLetter}`} /> : option}
-                </h3>
-              );
-            })}
-          </ul>
-
-          <button onClick={() => toggleAnswerVisibility(exercise.id)}>
-            {answerVisibility[exercise.id] ? "Esconder Resposta" : "Mostrar Resposta"}
-          </button>
-
-          {answerVisibility[exercise.id] && <h4>{exercise.answer}</h4>}
+          <Options options={exercise.options} correctAnswer={exercise.answer} />
         </div>
       ))}
     </div>
   );
+};
+
+ExercisesList.propTypes = {
+  selectedSubSubject: PropTypes.number
+};
+ExercisesList.defaultProps = {
+  selectedSubSubject: null
 };
 
 export default ExercisesList;
