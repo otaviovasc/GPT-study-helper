@@ -18,6 +18,7 @@ const Options = ({ options, correctAnswer }) => {
     };
 
     return (
+      <div className="options-container">
         <Radio.Group onChange={handleOptionSelect} value={selectedOption}>
             {options && options.map((option, idx) => {
                 const isImage = option.startsWith("http");
@@ -34,6 +35,7 @@ const Options = ({ options, correctAnswer }) => {
                 );
             })}
         </Radio.Group>
+      </div>
     );
 };
 
