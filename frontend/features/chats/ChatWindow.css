@@ -1,0 +1,20 @@
+.chat-window {
+  position: fixed;
+  bottom: 80px; /* Adjust based on icon size */
+  right: 20px;
+  width: 25vw; /* Adjust as needed */
+  height: 67vh; /* Adjust as needed */
+  border: 1px solid #2e2e2e;
+  border-radius: 8px;
+  background-color: rgb(33, 33, 33);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 600px) {
+  .chat-window {
+    width: 70vw; /* make the chat container full width */
+    height: 40vh; /* adjust the height as needed */
+  }
+}

@@ -8,8 +8,9 @@ class Gpt3Service
   def chat(message)
     response = @client.chat(
       parameters: {
-        model: "gpt-3.5-turbo", # Required.
-        messages: [{ role: "user", content: message}], # Required.
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: message}],
+        max_tokens: 150,
         temperature: 0.7
     })
     response.dig("choices", 0, "message", "content") if response['choices'].present?

@@ -40,8 +40,9 @@ const ChatComponent = () => {
           </p>
         ))}
       </div>
-      <div className="chat-input">
+      <div className="chat-input-container">
         <Input
+          className="chat-input"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onPressEnter={sendMessage}
