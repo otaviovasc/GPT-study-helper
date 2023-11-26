@@ -17,6 +17,7 @@ class Gpt3Service
         max_tokens: 150,
         temperature: 0.7
     })
+    p response
     response.dig("choices", 0, "message", "content") if response['choices'].present?
   rescue StandardError => e
     Rails.logger.error "Error communicating with OpenAI: #{e.message}"

@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Button, Input } from 'antd';
-import { FaBookReader, FaWindowMinimize, FaTimes } from 'react-icons/fa';
 import Draggable from 'react-draggable';
+import ChatHeader from './ChatHeader';
+import ChatConversation from './ChatConversation';
+import ChatInput from './ChatInput';
+import MinimizedIcon from './MinimizedIcon';
 import { API_URL } from "../../constants";
 import './ChatComponent.css';
 
@@ -9,24 +11,13 @@ const ChatComponent = () => {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [isMinimized, setIsMinimized] = useState(true);
-  const [activeDrags, setActiveDrags] = useState(0);
-
-  const onStart = () => {
-    setActiveDrags(prevActiveDrags => prevActiveDrags + 1);
-  };
-
-  const onStop = () => {
-    setActiveDrags(prevActiveDrags => prevActiveDrags - 1);
-  };
-
-  const dragHandlers = { onStart, onStop };
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
   };
 
   const toggleClose = () => {
-    toggleMinimize()
+    setIsMinimized(true)
     setChatHistory([])
   }
 
@@ -57,45 +48,17 @@ const ChatComponent = () => {
     setMessage('');
   };
 
-
   return (
-    <Draggable handle=".handle" {...dragHandlers}>
+    <Draggable handle=".handle">
       <div className={`chat-container ${isMinimized ? 'minimized' : ''}`}>
         {!isMinimized ? (
           <>
-            <div className="chat-header handle">
-              <FaBookReader className="chat-icon" />
-              <div className="header-actions">
-                <Button onClick={toggleMinimize} type="link" className="action-button">
-                  <FaWindowMinimize />
-                </Button>
-                <Button onClick={toggleClose} type="link" className="action-button">
-                  <FaTimes />
-                </Button>
-              </div>
-            </div>
-            <div className="chat-conversation">
-              {chatHistory.map((chat, index) => (
-                <p key={index} className={`chat-message ${chat.role === 'user' ? 'user' : 'bot'}`}>
-                  {chat.content}
-                </p>
-              ))}
-            </div>
-            <div className="chat-input-container">
-              <Input
-                className="chat-input"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onPressEnter={sendMessage}
-                placeholder="Type a message..."
-              />
-              <Button onClick={sendMessage} className="send-button">Send</Button>
-            </div>
+            <ChatHeader onMinimize={toggleMinimize} onClose={toggleClose} />
+            <ChatConversation chatHistory={chatHistory} />
+            <ChatInput message={message} setMessage={setMessage} onSend={sendMessage} />
           </>
         ) : (
-          <div className="minimized-icon handle">
-            <FaBookReader onClick={toggleMinimize} />
-          </div>
+          <MinimizedIcon onClick={toggleMinimize} />
         )}
       </div>
     </Draggable>
