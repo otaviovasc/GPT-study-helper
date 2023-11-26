@@ -6,10 +6,14 @@ class Gpt3Service
   end
 
   def chat(message)
+    formatted_messages = message.map do |msg|
+      { role: msg[:role] == 'user' ? 'user' : 'assistant', content: msg[:content] }
+    end
+
     response = @client.chat(
       parameters: {
         model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: message}],
+        messages: formatted_messages,
         max_tokens: 150,
         temperature: 0.7
     })
@@ -19,4 +23,3 @@ class Gpt3Service
     nil
   end
 end
-#EXTINF:-1,True Justice S01 E06 http://cdn.miip.tv:80/series/ileana/ileana/6055.mkv #EXTINF:-1,True Justice S01 E07 http://cdn.miip.tv:80/series/ileana/ileana/6056.mkv #EXTINF:-1,True Justice S01 E08 http://cdn.miip.tv:80/series/ileana/ileana/6057.mp4 #EXTINF:-1,True Justice S01 E09 http://cdn.miip.tv:80/series/ileana/ileana/60

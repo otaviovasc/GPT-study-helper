@@ -1,7 +1,7 @@
 class Api::V1::ChatController < ApplicationController
   def create
     service = Gpt3Service.new
-    reply = service.chat(params[:message])
+    reply = service.chat(params[:messages] || [params[:message]])
 
     if reply
       render json: { reply: reply }
