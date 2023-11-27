@@ -12,7 +12,7 @@ const ChatMessage = ({ text, role }) => {
   ));
 
   return (
-    <p className={`chat-message ${role === 'user' ? 'user' : 'bot'}`}>
+    <p className={`chat-message ${role}`}>
       {messageLines}
     </p>
   );
@@ -29,9 +29,9 @@ const ChatConversation = ({ chatHistory }) => (
 // Validations
 ChatConversation.propTypes = {
   chatHistory: PropTypes.arrayOf(PropTypes.shape({
-    role: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-  })).isRequired,
+    role: PropTypes.string,
+    content: PropTypes.string,
+  })),
 };
 
 ChatMessage.propTypes = {

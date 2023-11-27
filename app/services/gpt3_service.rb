@@ -7,7 +7,7 @@ class Gpt3Service
 
   def chat(message)
     formatted_messages = message.map do |msg|
-      { role: msg[:role] == 'user' ? 'user' : 'assistant', content: msg[:content] }
+      { role: msg[:role], content: msg[:content] }
     end
 
     response = @client.chat(
@@ -17,7 +17,8 @@ class Gpt3Service
         max_tokens: 150,
         temperature: 0.7
     })
-    p response
+    # p "Reponse from server was:\n#{response}"
+    puts formatted_messages
     response.dig("choices", 0, "message", "content") if response['choices'].present?
   rescue StandardError => e
     Rails.logger.error "Error communicating with OpenAI: #{e.message}"

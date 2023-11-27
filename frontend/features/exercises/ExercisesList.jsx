@@ -5,8 +5,12 @@ import Options from './Options';
 import PropTypes from 'prop-types';
 
 // Component responsible for displaying the list of exercises.
-const ExercisesList = ({ selectedSubSubject }) => {
+const ExercisesList = ({ selectedSubSubject, onTeacherHelpClick }) => {
   const [exercises, setExercises] = useState([]);
+
+  const handleTeacherHelp = (exercise) => {
+    onTeacherHelpClick(exercise.question); // Passing the question as context
+  };
 
   useEffect(() => {
       // Fetch exercises based on selected sub-subject
@@ -71,6 +75,11 @@ const ExercisesList = ({ selectedSubSubject }) => {
 
           {/* Render options */}
           <Options options={exercise.options} correctAnswer={exercise.answer} />
+
+          {/* Help button */}
+          <button onClick={() => handleTeacherHelp(exercise)} className="teacher-help-button">
+            Teacher Help
+          </button>
         </div>
       ))}
     </div>
@@ -78,7 +87,8 @@ const ExercisesList = ({ selectedSubSubject }) => {
 };
 
 ExercisesList.propTypes = {
-  selectedSubSubject: PropTypes.number
+  selectedSubSubject: PropTypes.number,
+  onTeacherHelpClick: PropTypes.func.isRequired,
 };
 ExercisesList.defaultProps = {
   selectedSubSubject: null

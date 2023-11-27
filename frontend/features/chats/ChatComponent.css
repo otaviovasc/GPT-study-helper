@@ -59,7 +59,7 @@
 
 /* Individual messages in the conversation */
 .chat-message {
-  background-color: #613434; /* Slightly darker grey */
+  background-color: #613434;
   padding: 8px 12px;
   border-radius: 18px;
   margin-bottom: 10px;
@@ -73,6 +73,12 @@
   background-color: #007bff; /* Blue for user messages */
   color: white;
   margin-left: auto; /* Align to right */
+}
+
+.chat-message.system {
+  background-color: #007100;
+  color: white;
+  margin-left: 20px;
 }
 
 /* Input area */

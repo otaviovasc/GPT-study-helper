@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Draggable from 'react-draggable';
 import ChatHeader from './ChatHeader';
 import ChatConversation from './ChatConversation';
 import ChatInput from './ChatInput';
 import MinimizedIcon from './MinimizedIcon';
 import { API_URL } from "../../constants";
+import PropTypes from 'prop-types';
 import './ChatComponent.css';
 
-const ChatComponent = () => {
+const ChatComponent = ({ chatContext }) => {
   const [message, setMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState(chatContext);
   const [isMinimized, setIsMinimized] = useState(true);
+
+  useEffect(() => {
+    setChatHistory(chatContext);
+  }, [chatContext]);
+
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
@@ -63,6 +69,17 @@ const ChatComponent = () => {
       </div>
     </Draggable>
   );
+};
+
+ChatComponent.propTypes = {
+  chatContext: PropTypes.arrayOf(PropTypes.shape({
+    role: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+  })).isRequired,
+};
+
+ChatComponent.defaultProps = {
+  chatContext: [],
 };
 
 export default ChatComponent;
