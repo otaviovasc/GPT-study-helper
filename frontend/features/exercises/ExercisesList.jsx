@@ -9,7 +9,7 @@ const ExercisesList = ({ selectedSubSubject, onTeacherHelpClick }) => {
   const [exercises, setExercises] = useState([]);
 
   const handleTeacherHelp = (exercise) => {
-    onTeacherHelpClick(exercise.question); // Passing the question as context
+    onTeacherHelpClick(exercise);
   };
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const ExercisesList = ({ selectedSubSubject, onTeacherHelpClick }) => {
 
           {/* Help button */}
           <button onClick={() => handleTeacherHelp(exercise)} className="teacher-help-button">
-            Teacher Help
+            Help AI
           </button>
         </div>
       ))}

@@ -8,49 +8,53 @@ import { API_URL } from "../../constants";
 import PropTypes from 'prop-types';
 import './ChatComponent.css';
 
-const ChatComponent = ({ chatContext }) => {
+const ChatComponent = ({ chatHistory, aiContext, isMinimized, setIsMinimized }) => {
   const [message, setMessage] = useState('');
-  const [chatHistory, setChatHistory] = useState(chatContext);
-  const [isMinimized, setIsMinimized] = useState(true);
+  const [chatRecord, setChatRecord] = useState([]);
 
   useEffect(() => {
-    setChatHistory(chatContext);
-  }, [chatContext]);
-
+    setChatRecord(chatHistory);
+  }, [chatHistory]);
 
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
   };
 
   const toggleClose = () => {
-    setIsMinimized(true)
-    setChatHistory([])
-  }
+    setIsMinimized(true);
+    setChatRecord([]);
+  };
 
   const sendMessage = async () => {
     if (!message) return;
 
-    const updatedChatHistory = [...chatHistory, { role: 'user', content: message }];
-    setChatHistory(updatedChatHistory);
+    const updatedChatRecord = [...chatRecord, { role: 'user', content: message }];
+    setChatRecord(updatedChatRecord);
 
-    // Send the updated chat history to the Rails server
-    const response = await fetch(`${API_URL}/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: updatedChatHistory })
-    });
+    try {
+      const response = await fetch(`${API_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: updatedChatRecord, context: aiContext })
+      });
 
-    const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-    // Add server response to chat history
-    if (data.reply) {
-      setChatHistory(currentChatHistory => [
-        ...currentChatHistory,
-        { role: 'assistant', content: data.reply }
-      ]);
+      const data = await response.json();
+
+      if (data.reply) {
+        setChatRecord(currentChatRecord => [
+          ...currentChatRecord,
+          { role: 'assistant', content: data.reply }
+        ]);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      // Handle the error (e.g., show an error message to the user)
     }
 
-    // Clear the input field
     setMessage('');
   };
 
@@ -60,7 +64,7 @@ const ChatComponent = ({ chatContext }) => {
         {!isMinimized ? (
           <>
             <ChatHeader onMinimize={toggleMinimize} onClose={toggleClose} />
-            <ChatConversation chatHistory={chatHistory} />
+            <ChatConversation chatHistory={chatRecord} />
             <ChatInput message={message} setMessage={setMessage} onSend={sendMessage} />
           </>
         ) : (
@@ -72,14 +76,13 @@ const ChatComponent = ({ chatContext }) => {
 };
 
 ChatComponent.propTypes = {
-  chatContext: PropTypes.arrayOf(PropTypes.shape({
+  chatHistory: PropTypes.arrayOf(PropTypes.shape({
     role: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
   })).isRequired,
-};
-
-ChatComponent.defaultProps = {
-  chatContext: [],
+  aiContext: PropTypes.string,
+  isMinimized: PropTypes.bool.isRequired,
+  setIsMinimized: PropTypes.func.isRequired,
 };
 
 export default ChatComponent;
